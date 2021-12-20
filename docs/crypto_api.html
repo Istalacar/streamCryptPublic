@@ -19,16 +19,18 @@
         <div class="py-5">
           <h1 class="display-5 fw-bold text-white">Encrypted files4all</h1>
           <div class="col-lg-6 mx-auto">
-            <p class="fs-5 mb-4">Zaszyfrowany plik można pobrać<br/><a href="./encrypted_file" target="_blank"><button type="button" class="btn btn-outline-secondary btn-lg px-4 me-sm-3 fw-bold">tutaj</button></a></p>
-            <p>Suma kontrolna pliku przed zaszyfrowaniem: c8c4587c46d1a793d9ab72a7b42e8461</p>
-            <p class="fs-5 mb-4">Poniżej dostępny jest panel pozwalający zaszyfrować pliki tym samym kluczem szyfrującym co oryginalny plik. Pamiętaj że oryginalny plik jest w formacie binarnym, tutaj dla ułatwienia, dane są podawane w kodowaniu szestastkowym.
+            <p class="fs-5 mb-4">Zaszyfrowany plik można pobrać</p><p><a href="./encrypted_file" target="_blank"><button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">tutaj</button></a></p>
+            <p>Suma kontrolna pliku oryginalnego: c8c4587c46d1a793d9ab72a7b42e8461</p>
+            <p>Suma kontrolna pliku zaszyfrowanego: dd9e917c44f5fc9751e20484baf0a578</p>
+            <p class="fs-5 mb-4">Z uwagi na to, że algorytm szyfrujący jest dość prosty (security by obscurity), celem zadania jest jego odnalezienie. Podanie klucza szyfrującego liczy się jako pół punktu.</p>
+            <p class="fs-5 mb-4">Poniżej dostępne są opcjonalne wskazówki, mające ułatwić rozwiązanie problemu.</p>
             </p>
           </div>
         </div>
     </div>
     <div class="b-example-divider"></div>
     <div class="bg-dark text-secondary px-4 py-5">
-        <p class="fs-5 mb-4">Dane do zaszyfrowania:<br/><textarea class="form-control" placeholder="Lorem ipsum dolor sit amet" id="clean_text" style="height: 100px"></textarea>
+        <p class="fs-5 mb-4">Dane do zaszyfrowania:<br/><textarea class="form-control" id="clean_text" style="height: 100px">Lorem ipsum dolor sit amet</textarea>
         </p>
         <p class="fs-5 mb-4"></p><button type="button" class="btn btn-outline-primary btn-lg px-4 me-sm-3 fw-bold encrypt-button">Zaszyfruj</button></p>
         <p class="fs-5 mb-4">Dane zaszyfrowane:<br/><textarea class="form-control" id="encrypted_text" style="height: 100px"></textarea>
@@ -40,14 +42,17 @@
     <script type="text/javascript">
         $( document ).ready(function() {
             $.support.cors = true;
+            
             $(".encrypt-button").on("click", function () {
+                data_to_send = JSON.stringify({"entry_data": $("#clean_text").val(), "task": "encrypt"});
+                console.log(data_to_send);
                 $.ajax({
-                    "url": "https://hq6m9y5y3g.execute-api.eu-west-1.amazonaws.com/default/MyCipher",
-                    "data": {"entry_data": $("#clean_text").val(), "task": "encrypt"},
+                    "url": "https://s2zr9175f4.execute-api.eu-west-1.amazonaws.com/default/MyCipher",
+                    "data": JSON.stringify({"entry_data": $("#clean_text").val(), "task": "encrypt"}),
                     "type": "POST",
-                    "dataType": "raw"
-                }).done(function (raw) {
-                    $("#encrypted_text").val(raw)
+                    "dataType": "text"
+                }).done(function (text) {
+                    $("#encrypted_text").val(text)
                 })
             });
         });
